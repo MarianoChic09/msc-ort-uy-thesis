@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "Introduction", "label": "Introduction", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Objectives", "label": "Objectives", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Scope of application", "label": "Scope of application", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Requirements", "label": "Requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ESS3 Resource Efficiency and Pollution Prevention and Management", "label": "ESS3 Resource Efficiency and Pollution Prevention and Management", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Resource efficiency", "label": "Resource efficiency", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Energy use", "label": "Energy use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Raw material use", "label": "Raw material use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Water use", "label": "Water use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pollution prevention and management", "label": "Pollution prevention and management", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Historical pollution", "label": "Historical pollution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Release of pollutants", "label": "Release of pollutants", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Borrower to establish a process to identify the responsible party for historical pollution", "label": "Borrower to establish a process to identify the responsible party for historical pollution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "If historical pollution poses significant risk, undertake a health and safety risk assessment", "label": "If historical pollution poses significant risk, undertake a health and safety risk assessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Consider seeking recourse from responsible third parties for historical pollution remediation", "label": "Consider seeking recourse from responsible third parties for historical pollution remediation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Seek to reduce or eliminate the use of toxic or hazardous raw materials", "label": "Seek to reduce or eliminate the use of toxic or hazardous raw materials", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ESS3", "label": "ESS3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "16", "label": "16", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "17", "label": "17", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "13", "label": "13", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "18", "label": "18", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "14", "label": "14", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15", "label": "15", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Waste Management", "label": "Waste Management", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Reuse, Recycle, Recover", "label": "Reuse, Recycle, Recover", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Treat, Destroy, Dispose", "label": "Treat, Destroy, Dispose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Hazardous Waste Management", "label": "Hazardous Waste Management", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Environmental and Social Framework", "label": "Environmental and Social Framework", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Management of pesticides", "label": "Management of pesticides", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Preference to IPM or IVM approaches", "label": "Preference to IPM or IVM approaches", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Assessment of risks in pesticide procurement", "label": "Assessment of risks in pesticide procurement", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Compliance with EHSGs", "label": "Compliance with EHSGs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Restrictions on pesticide products", "label": "Restrictions on pesticide products", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Additional criteria for pesticide selection and use", "label": "Additional criteria for pesticide selection and use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pesticide Products Requirements", "label": "Pesticide Products Requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Prevent development of resistance in pests", "label": "Prevent development of resistance in pests", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Manufactured, formulated, packaged, labeled, handled, stored, disposed, and applied according to international standards", "label": "Manufactured, formulated, packaged, labeled, handled, stored, disposed, and applied according to international standards", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Safe for inhabitants and domestic animals", "label": "Safe for inhabitants and domestic animals", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Negligible adverse human health effects", "label": "Negligible adverse human health effects", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Effective against target species", "label": "Effective against target species", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Minimal effect on nontarget species and natural environment", "label": "Minimal effect on nontarget species and natural environment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "No use if country lacks restrictions or accessible to untrained personnel", "label": "No use if country lacks restrictions or accessible to untrained personnel", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Registered or authorized for intended use", "label": "Registered or authorized for intended use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "EHSGs compliance", "label": "EHSGs compliance", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Requirement 25", "label": "Requirement 25", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Activities leading to significant pest and pesticide management issues", "label": "Activities leading to significant pest and pesticide management issues", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Significant pest management issues", "label": "Significant pest management issues", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Rodent control", "label": "Rodent control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bird control", "label": "Bird control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mosquito or other disease vector control", "label": "Mosquito or other disease vector control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Migratory locust control", "label": "Migratory locust control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Diversification into new crops in agriculture", "label": "Diversification into new crops in agriculture", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "New land-use development or changed cultivation practices", "label": "New land-use development or changed cultivation practices", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Significant expansion into new areas", "label": "Significant expansion into new areas", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "197eb314-eaf5-42fe-8ca1-8d8d6235d5e8", "label": "197eb314-eaf5-42fe-8ca1-8d8d6235d5e8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5dc7f46b-452f-4d37-8afc-c1d1c32a5b10", "label": "5dc7f46b-452f-4d37-8afc-c1d1c32a5b10", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4915994a-83e2-4931-aa30-80898e5fdc5f", "label": "4915994a-83e2-4931-aa30-80898e5fdc5f", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "02507e6e-eb47-46cd-94d2-03ee000ac39e", "label": "02507e6e-eb47-46cd-94d2-03ee000ac39e", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "84a3d823-6f07-45e3-9b6a-02a9cdb39344", "label": "84a3d823-6f07-45e3-9b6a-02a9cdb39344", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "283bdc1f-4cb7-49be-9f43-cabf560bf7f5", "label": "283bdc1f-4cb7-49be-9f43-cabf560bf7f5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3b36f4d4-b0ae-40ff-9cc0-554e1e50ce4d", "label": "3b36f4d4-b0ae-40ff-9cc0-554e1e50ce4d", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "8d862eae-3bad-44f2-833b-344fc56053af", "label": "8d862eae-3bad-44f2-833b-344fc56053af", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Introduction", "label": "NEXT", "to": "Objectives", "width": 1}, {"arrows": "to", "from": "Objectives", "label": "NEXT", "to": "Scope of application", "width": 1}, {"arrows": "to", "from": "Scope of application", "label": "NEXT", "to": "Requirements", "width": 1}, {"arrows": "to", "from": "ESS3 Resource Efficiency and Pollution Prevention and Management", "label": "HAS_SECTION", "to": "Requirements", "width": 1}, {"arrows": "to", "from": "ESS3 Resource Efficiency and Pollution Prevention and Management", "label": "HAS_SECTION", "to": "Objectives", "width": 1}, {"arrows": "to", "from": "ESS3 Resource Efficiency and Pollution Prevention and Management", "label": "HAS_SECTION", "to": "Scope of application", "width": 1}, {"arrows": "to", "from": "ESS3 Resource Efficiency and Pollution Prevention and Management", "label": "HAS_SECTION", "to": "Introduction", "width": 1}, {"arrows": "to", "from": "Resource efficiency", "label": "HAS_SUBREQUIREMENTS", "to": "Energy use", "width": 1}, {"arrows": "to", "from": "Resource efficiency", "label": "HAS_SUBREQUIREMENTS", "to": "Raw material use", "width": 1}, {"arrows": "to", "from": "Resource efficiency", "label": "HAS_SUBREQUIREMENTS", "to": "Water use", "width": 1}, {"arrows": "to", "from": "Energy use", "label": "NEXT", "to": "Water use", "width": 1}, {"arrows": "to", "from": "Water use", "label": "NEXT", "to": "Raw material use", "width": 1}, {"arrows": "to", "from": "Pollution prevention and management", "label": "HAS_SUBREQUIREMENTS", "to": "Historical pollution", "width": 1}, {"arrows": "to", "from": "Pollution prevention and management", "label": "HAS_SUBREQUIREMENTS", "to": "Release of pollutants", "width": 1}, {"arrows": "to", "from": "Release of pollutants", "label": "NEXT", "to": "Historical pollution", "width": 1}, {"arrows": "to", "from": "Borrower to establish a process to identify the responsible party for historical pollution", "label": "HAS_SUBREQUIREMENTS", "to": "If historical pollution poses significant risk, undertake a health and safety risk assessment", "width": 1}, {"arrows": "to", "from": "Borrower to establish a process to identify the responsible party for historical pollution", "label": "HAS_SUBREQUIREMENTS", "to": "Consider seeking recourse from responsible third parties for historical pollution remediation", "width": 1}, {"arrows": "to", "from": "Borrower to establish a process to identify the responsible party for historical pollution", "label": "HAS_SUBREQUIREMENTS", "to": "Seek to reduce or eliminate the use of toxic or hazardous raw materials", "width": 1}, {"arrows": "to", "from": "ESS3", "label": "HAS_SUBREQUIREMENTS", "to": "16", "width": 1}, {"arrows": "to", "from": "ESS3", "label": "HAS_SUBREQUIREMENTS", "to": "17", "width": 1}, {"arrows": "to", "from": "ESS3", "label": "HAS_SUBREQUIREMENTS", "to": "13", "width": 1}, {"arrows": "to", "from": "ESS3", "label": "HAS_SUBREQUIREMENTS", "to": "18", "width": 1}, {"arrows": "to", "from": "ESS3", "label": "HAS_SUBREQUIREMENTS", "to": "14", "width": 1}, {"arrows": "to", "from": "ESS3", "label": "HAS_SUBREQUIREMENTS", "to": "15", "width": 1}, {"arrows": "to", "from": "13", "label": "NEXT", "to": "14", "width": 1}, {"arrows": "to", "from": "14", "label": "NEXT", "to": "15", "width": 1}, {"arrows": "to", "from": "15", "label": "NEXT", "to": "16", "width": 1}, {"arrows": "to", "from": "Waste Management", "label": "HAS_SUBREQUIREMENTS", "to": "Reuse, Recycle, Recover", "width": 1}, {"arrows": "to", "from": "Waste Management", "label": "HAS_SUBREQUIREMENTS", "to": "Treat, Destroy, Dispose", "width": 1}, {"arrows": "to", "from": "Waste Management", "label": "HAS_SUBREQUIREMENTS", "to": "Hazardous Waste Management", "width": 1}, {"arrows": "to", "from": "Environmental and Social Framework", "label": "HAS_SECTION", "to": "Management of pesticides", "width": 1}, {"arrows": "to", "from": "Preference to IPM or IVM approaches", "label": "NEXT", "to": "Assessment of risks in pesticide procurement", "width": 1}, {"arrows": "to", "from": "Assessment of risks in pesticide procurement", "label": "NEXT", "to": "Compliance with EHSGs", "width": 1}, {"arrows": "to", "from": "Compliance with EHSGs", "label": "NEXT", "to": "Restrictions on pesticide products", "width": 1}, {"arrows": "to", "from": "Restrictions on pesticide products", "label": "NEXT", "to": "Additional criteria for pesticide selection and use", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Prevent development of resistance in pests", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Manufactured, formulated, packaged, labeled, handled, stored, disposed, and applied according to international standards", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Safe for inhabitants and domestic animals", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Negligible adverse human health effects", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Effective against target species", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Minimal effect on nontarget species and natural environment", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "No use if country lacks restrictions or accessible to untrained personnel", "width": 1}, {"arrows": "to", "from": "Pesticide Products Requirements", "label": "HAS_SUBREQUIREMENTS", "to": "Registered or authorized for intended use", "width": 1}, {"arrows": "to", "from": "Manufactured, formulated, packaged, labeled, handled, stored, disposed, and applied according to international standards", "label": "NEXT", "to": "EHSGs compliance", "width": 1}, {"arrows": "to", "from": "Requirement 25", "label": "HAS_SUBREQUIREMENTS", "to": "Activities leading to significant pest and pesticide management issues", "width": 1}, {"arrows": "to", "from": "Requirement 25", "label": "HAS_SUBREQUIREMENTS", "to": "Significant pest management issues", "width": 1}, {"arrows": "to", "from": "Significant pest management issues", "label": "NEXT", "to": "Rodent control", "width": 1}, {"arrows": "to", "from": "Significant pest management issues", "label": "NEXT", "to": "Bird control", "width": 1}, {"arrows": "to", "from": "Significant pest management issues", "label": "NEXT", "to": "Mosquito or other disease vector control", "width": 1}, {"arrows": "to", "from": "Significant pest management issues", "label": "NEXT", "to": "Migratory locust control", "width": 1}, {"arrows": "to", "from": "Activities leading to significant pest and pesticide management issues", "label": "NEXT", "to": "Diversification into new crops in agriculture", "width": 1}, {"arrows": "to", "from": "Activities leading to significant pest and pesticide management issues", "label": "NEXT", "to": "New land-use development or changed cultivation practices", "width": 1}, {"arrows": "to", "from": "Activities leading to significant pest and pesticide management issues", "label": "NEXT", "to": "Significant expansion into new areas", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
