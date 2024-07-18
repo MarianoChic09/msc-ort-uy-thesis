@@ -2,8 +2,10 @@ from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, StorageCon
 
 class IndexManager:
     @staticmethod
-    def create_index(documents, storage_context=None):
-        return VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    def create_index(documents, storage_dir, storage_context=None):
+        index = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+        index.storage_context.persist(storage_dir)
+        return index
 
     @staticmethod
     def load_documents(directory_path):
