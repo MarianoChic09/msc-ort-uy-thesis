@@ -11,31 +11,24 @@ async def startup_event():
     global llm, embed_model
     llm, embed_model = Models.initialize_models()
 
-@app.post("/upload-document/")
-async def upload_document(file: UploadFile = File(...)):
+def process_document(file: UploadFile, storage_dir, graph_name=None, kg_extractor=None):
     file_location = f"data/03_processed/{file.filename}"
     save_uploaded_file(file, file_location)
-
+    
     documents = IndexManager.load_documents("data/03_processed/")
+    index = IndexManager.create_index(documents, llm, embed_model, kg_extractor, storage_dir, graph_name)
+    return index
+
+@app.post("/upload-document")
+async def upload_document(file: UploadFile = File(...)):
     kg_extractor = IndexManager.create_schema_llm_extractor(llm)
-    index = IndexManager.create_index(documents, llm, embed_model, kg_extractor)
-    index.property_graph_store.save_networkx_graph(name="./data/08_reports/kg_result.html")
+    process_document(file, storage_dir="./storage", graph_name="data/08_reports/kg_predefined_schema.html", kg_extractor=kg_extractor)
+    return {"message": "Document uploaded and index created successfully."}
 
-@app.post("/query/")
-async def query_index(query_request: Query):
-    try:
-        index = IndexManager.load_index()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to load index: {e}")
-
-    query_engine = index.as_query_engine(
-        include_text=True,
-        similarity_top_k=2,
-        embed_model=embed_model,
-    )
-    response = query_engine.query(query_request.query)
-
-    return {"response": response}
+@app.post("/free-form-extractor")
+async def free_form_extractor(file: UploadFile = File(...)):
+    process_document(file, storage_dir="./free_form_storage", graph_name="data/08_reports/kg_free_form.html")
+    return {"message": "Document uploaded and free form index created successfully."}
 
 if __name__ == "__main__":
     import uvicorn

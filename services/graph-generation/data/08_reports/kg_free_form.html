@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "8173125c-37f3-48a3-979a-fb7fe036d942", "label": "8173125c-37f3-48a3-979a-fb7fe036d942", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "93529468-9664-4a11-b4c0-8ad5d64bd0bb", "label": "93529468-9664-4a11-b4c0-8ad5d64bd0bb", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "314c9d89-3640-4c6b-afb1-7f073a2a84a2", "label": "314c9d89-3640-4c6b-afb1-7f073a2a84a2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "a9a90a12-222b-42ec-a621-2e484d9a7625", "label": "a9a90a12-222b-42ec-a621-2e484d9a7625", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7f7481e4-a231-401f-af56-9e5868c94653", "label": "7f7481e4-a231-401f-af56-9e5868c94653", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4cf8bb3d-43c8-4015-adbc-43b7ef3c0fd8", "label": "4cf8bb3d-43c8-4015-adbc-43b7ef3c0fd8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "f3f26f7d-595a-48a1-aaba-cf036e94845f", "label": "f3f26f7d-595a-48a1-aaba-cf036e94845f", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "311160a8-b5ca-402a-9f80-45b3847d6821", "label": "311160a8-b5ca-402a-9f80-45b3847d6821", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "8bfb721f-40e2-4a13-98c6-8eef6865feba", "label": "8bfb721f-40e2-4a13-98c6-8eef6865feba", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "419d5f64-ca07-44cc-b8d5-4f43c371b67f", "label": "419d5f64-ca07-44cc-b8d5-4f43c371b67f", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "fbecc6cc-f203-44cd-8e70-17255788e65c", "label": "fbecc6cc-f203-44cd-8e70-17255788e65c", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "43b47c1f-f716-4e89-95be-ff433b92bc11", "label": "43b47c1f-f716-4e89-95be-ff433b92bc11", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "6c659d92-9616-44e5-8053-b77dc6591053", "label": "6c659d92-9616-44e5-8053-b77dc6591053", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ess3", "label": "Ess3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Economic activity generates pollution", "label": "Economic activity generates pollution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Economic activity", "label": "Economic activity", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pollution", "label": "Pollution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Environment", "label": "Environment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "People", "label": "People", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Eco-system services", "label": "Eco-system services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ghg", "label": "Ghg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Welfare of generations", "label": "Welfare of generations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ess", "label": "Ess", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sustainable use of resources", "label": "Sustainable use of resources", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Requirements", "label": "Requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pollution prevention", "label": "Pollution prevention", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Resource efficiency", "label": "Resource efficiency", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Borrower", "label": "Borrower", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Project\u2019s proximity to areas of importance to biodiversity", "label": "Project\u2019s proximity to areas of importance to biodiversity", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Measures to avoid or minimize water usage", "label": "Measures to avoid or minimize water usage", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pesticide formulations", "label": "Pesticide formulations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Remaining assimilative capacity", "label": "Remaining assimilative capacity", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Additional strategies", "label": "Additional strategies", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Waste", "label": "Waste", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Health and safety risk assessment", "label": "Health and safety risk assessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Measures specified in ehsgs", "label": "Measures specified in ehsgs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Measures to optimize energy usage", "label": "Measures to optimize energy usage", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Comparison", "label": "Comparison", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Impacts of climate change", "label": "Impacts of climate change", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Licensed disposal sites", "label": "Licensed disposal sites", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Use of hazardous materials", "label": "Use of hazardous materials", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Less hazardous substitutes", "label": "Less hazardous substitutes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Measures for improving efficient consumption", "label": "Measures for improving efficient consumption", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Existing and future land use", "label": "Existing and future land use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Manufacture of chemicals", "label": "Manufacture of chemicals", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pest management plan", "label": "Pest management plan", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Measures", "label": "Measures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Reduce use of toxic materials", "label": "Reduce use of toxic materials", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Release of hazardous materials", "label": "Release of hazardous materials", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Process", "label": "Process", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Alternative disposal options", "label": "Alternative disposal options", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Chain of custody documentation", "label": "Chain of custody documentation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Negative effects", "label": "Negative effects", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Waste sent to such sites", "label": "Waste sent to such sites", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Relevant factors", "label": "Relevant factors", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Potential cumulative impacts of water use", "label": "Potential cumulative impacts of water use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Giip alternatives", "label": "Giip alternatives", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Existing ambient conditions", "label": "Existing ambient conditions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Hazardous materials for project activities", "label": "Hazardous materials for project activities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Potential for cumulative impacts", "label": "Potential for cumulative impacts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Principles of cleaner production", "label": "Principles of cleaner production", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Proportionate", "label": "Proportionate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Project", "label": "Project", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Activities", "label": "Activities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Historical pollution", "label": "Historical pollution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Significant pest management issues", "label": "Significant pest management issues", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Significant risk", "label": "Significant risk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Responsible party", "label": "Responsible party", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Assessment", "label": "Assessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Communities", "label": "Communities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Workers", "label": "Workers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Remediation", "label": "Remediation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "National law", "label": "National law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Emissions", "label": "Emissions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Recovered", "label": "Recovered", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Residues", "label": "Residues", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Reused", "label": "Reused", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Recycled", "label": "Recycled", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pesticide products", "label": "Pesticide products", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Risk", "label": "Risk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Human health", "label": "Human health", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Country", "label": "Country", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Restrictions", "label": "Restrictions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Management", "label": "Management", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Distribution", "label": "Distribution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Use", "label": "Use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pesticides", "label": "Pesticides", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Negligible adverse effects", "label": "Negligible adverse effects", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Effective against target species", "label": "Effective against target species", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Issues", "label": "Issues", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Rodent control", "label": "Rodent control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mosquito control", "label": "Mosquito control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Migratory locust control", "label": "Migratory locust control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bird control", "label": "Bird control", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Financing", "label": "Financing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Large component of project", "label": "Large component of project", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Substantial quantities of pesticides", "label": "Substantial quantities of pesticides", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "8173125c-37f3-48a3-979a-fb7fe036d942", "label": "SOURCE", "to": "93529468-9664-4a11-b4c0-8ad5d64bd0bb", "width": 1}, {"arrows": "to", "from": "314c9d89-3640-4c6b-afb1-7f073a2a84a2", "label": "NEXT", "to": "a9a90a12-222b-42ec-a621-2e484d9a7625", "width": 1}, {"arrows": "to", "from": "314c9d89-3640-4c6b-afb1-7f073a2a84a2", "label": "SOURCE", "to": "7f7481e4-a231-401f-af56-9e5868c94653", "width": 1}, {"arrows": "to", "from": "a9a90a12-222b-42ec-a621-2e484d9a7625", "label": "PREVIOUS", "to": "314c9d89-3640-4c6b-afb1-7f073a2a84a2", "width": 1}, {"arrows": "to", "from": "a9a90a12-222b-42ec-a621-2e484d9a7625", "label": "SOURCE", "to": "7f7481e4-a231-401f-af56-9e5868c94653", "width": 1}, {"arrows": "to", "from": "4cf8bb3d-43c8-4015-adbc-43b7ef3c0fd8", "label": "SOURCE", "to": "f3f26f7d-595a-48a1-aaba-cf036e94845f", "width": 1}, {"arrows": "to", "from": "4cf8bb3d-43c8-4015-adbc-43b7ef3c0fd8", "label": "NEXT", "to": "311160a8-b5ca-402a-9f80-45b3847d6821", "width": 1}, {"arrows": "to", "from": "311160a8-b5ca-402a-9f80-45b3847d6821", "label": "SOURCE", "to": "f3f26f7d-595a-48a1-aaba-cf036e94845f", "width": 1}, {"arrows": "to", "from": "311160a8-b5ca-402a-9f80-45b3847d6821", "label": "PREVIOUS", "to": "4cf8bb3d-43c8-4015-adbc-43b7ef3c0fd8", "width": 1}, {"arrows": "to", "from": "8bfb721f-40e2-4a13-98c6-8eef6865feba", "label": "SOURCE", "to": "419d5f64-ca07-44cc-b8d5-4f43c371b67f", "width": 1}, {"arrows": "to", "from": "8bfb721f-40e2-4a13-98c6-8eef6865feba", "label": "NEXT", "to": "fbecc6cc-f203-44cd-8e70-17255788e65c", "width": 1}, {"arrows": "to", "from": "fbecc6cc-f203-44cd-8e70-17255788e65c", "label": "PREVIOUS", "to": "8bfb721f-40e2-4a13-98c6-8eef6865feba", "width": 1}, {"arrows": "to", "from": "fbecc6cc-f203-44cd-8e70-17255788e65c", "label": "SOURCE", "to": "419d5f64-ca07-44cc-b8d5-4f43c371b67f", "width": 1}, {"arrows": "to", "from": "43b47c1f-f716-4e89-95be-ff433b92bc11", "label": "SOURCE", "to": "6c659d92-9616-44e5-8053-b77dc6591053", "width": 1}, {"arrows": "to", "from": "Ess3", "label": "Recognizes", "to": "Economic activity generates pollution", "width": 1}, {"arrows": "to", "from": "Economic activity", "label": "Generates", "to": "Pollution", "width": 1}, {"arrows": "to", "from": "Pollution", "label": "Threatens", "to": "Environment", "width": 1}, {"arrows": "to", "from": "Pollution", "label": "Threatens", "to": "People", "width": 1}, {"arrows": "to", "from": "Pollution", "label": "Threatens", "to": "Eco-system services", "width": 1}, {"arrows": "to", "from": "Ghg", "label": "Threatens", "to": "Welfare of generations", "width": 1}, {"arrows": "to", "from": "Ess", "label": "Promotes", "to": "Sustainable use of resources", "width": 1}, {"arrows": "to", "from": "Ess", "label": "Sets out", "to": "Requirements", "width": 1}, {"arrows": "to", "from": "Requirements", "label": "Address", "to": "Pollution prevention", "width": 1}, {"arrows": "to", "from": "Requirements", "label": "Address", "to": "Resource efficiency", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Project\u2019s proximity to areas of importance to biodiversity", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Adopt", "to": "Measures to avoid or minimize water usage", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Will not use", "to": "Pesticide formulations", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Remaining assimilative capacity", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Additional strategies", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Will dispose of", "to": "Waste", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Undertake", "to": "Health and safety risk assessment", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Adopt", "to": "Measures specified in ehsgs", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Will comply with", "to": "Requirements", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Adopt", "to": "Measures to optimize energy usage", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Make", "to": "Comparison", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Impacts of climate change", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Ascertain", "to": "Licensed disposal sites", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Control", "to": "Use of hazardous materials", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Less hazardous substitutes", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Implement", "to": "Measures for improving efficient consumption", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Existing and future land use", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Avoid", "to": "Manufacture of chemicals", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Prepare", "to": "Pest management plan", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Adopt", "to": "Measures", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Seek", "to": "Reduce use of toxic materials", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Minimize", "to": "Release of hazardous materials", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Establish", "to": "Process", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Alternative disposal options", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Obtain", "to": "Chain of custody documentation", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Avoid or minimize", "to": "Negative effects", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Minimize", "to": "Waste sent to such sites", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Relevant factors", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Assess", "to": "Potential cumulative impacts of water use", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Will adopt", "to": "Giip alternatives", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Existing ambient conditions", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Assess", "to": "Hazardous materials for project activities", "width": 1}, {"arrows": "to", "from": "Borrower", "label": "Consider", "to": "Potential for cumulative impacts", "width": 1}, {"arrows": "to", "from": "Measures", "label": "Integrate", "to": "Principles of cleaner production", "width": 1}, {"arrows": "to", "from": "Measures", "label": "Be", "to": "Proportionate", "width": 1}, {"arrows": "to", "from": "Project", "label": "Contemplating", "to": "Activities", "width": 1}, {"arrows": "to", "from": "Project", "label": "Involves", "to": "Historical pollution", "width": 1}, {"arrows": "to", "from": "Project", "label": "Involving", "to": "Significant pest management issues", "width": 1}, {"arrows": "to", "from": "Historical pollution", "label": "Pose", "to": "Significant risk", "width": 1}, {"arrows": "to", "from": "Process", "label": "Identify", "to": "Responsible party", "width": 1}, {"arrows": "to", "from": "Assessment", "label": "Affect", "to": "Communities", "width": 1}, {"arrows": "to", "from": "Assessment", "label": "Affect", "to": "Workers", "width": 1}, {"arrows": "to", "from": "Assessment", "label": "Affect", "to": "Environment", "width": 1}, {"arrows": "to", "from": "Remediation", "label": "Undertaken", "to": "National law", "width": 1}, {"arrows": "to", "from": "Waste", "label": "Includes", "to": "Emissions", "width": 1}, {"arrows": "to", "from": "Waste", "label": "Cannot be", "to": "Recovered", "width": 1}, {"arrows": "to", "from": "Waste", "label": "Includes", "to": "Residues", "width": 1}, {"arrows": "to", "from": "Waste", "label": "Cannot be", "to": "Reused", "width": 1}, {"arrows": "to", "from": "Waste", "label": "Cannot be", "to": "Recycled", "width": 1}, {"arrows": "to", "from": "Pesticide products", "label": "Poses", "to": "Risk", "width": 1}, {"arrows": "to", "from": "Risk", "label": "To", "to": "Environment", "width": 1}, {"arrows": "to", "from": "Risk", "label": "To", "to": "Human health", "width": 1}, {"arrows": "to", "from": "Country", "label": "Lacks", "to": "Restrictions", "width": 1}, {"arrows": "to", "from": "Restrictions", "label": "On", "to": "Management", "width": 1}, {"arrows": "to", "from": "Restrictions", "label": "On", "to": "Distribution", "width": 1}, {"arrows": "to", "from": "Restrictions", "label": "On", "to": "Use", "width": 1}, {"arrows": "to", "from": "Pesticides", "label": "Will have", "to": "Negligible adverse effects", "width": 1}, {"arrows": "to", "from": "Pesticides", "label": "Will be", "to": "Effective against target species", "width": 1}, {"arrows": "to", "from": "Activities", "label": "Lead to", "to": "Significant pest management issues", "width": 1}, {"arrows": "to", "from": "Issues", "label": "Include", "to": "Rodent control", "width": 1}, {"arrows": "to", "from": "Issues", "label": "Include", "to": "Mosquito control", "width": 1}, {"arrows": "to", "from": "Issues", "label": "Include", "to": "Migratory locust control", "width": 1}, {"arrows": "to", "from": "Issues", "label": "Include", "to": "Bird control", "width": 1}, {"arrows": "to", "from": "Financing", "label": "Represents", "to": "Large component of project", "width": 1}, {"arrows": "to", "from": "Financing", "label": "Envisaged", "to": "Substantial quantities of pesticides", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

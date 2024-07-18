@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = ""
+authors = ["Mariano Chicatun <marianochicatun@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+llama-index = "^0.10.55"
+loguru = "^0.7.2"
+pydantic = "^2.8.2"
+fastapi = "^0.111.1"
+pydantic-settings = "^2.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
