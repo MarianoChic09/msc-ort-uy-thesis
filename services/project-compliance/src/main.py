@@ -82,6 +82,10 @@ async def search_answers(query_request: QueryRequest):
         })
     return {"results": results}
 
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the Project Compliance API!"}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=9000)
