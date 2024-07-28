@@ -23,7 +23,7 @@ async def startup_event():
     global index, storage_context
     global llm, embed_model
     llm, embed_model = Models.initialize_models()
-    storage_dir = "./storage"
+    storage_dir = "./storage_vector_store"
     try:
         if not os.path.exists(os.path.join(storage_dir, "docstore.json")):
             raise FileNotFoundError
@@ -42,19 +42,22 @@ async def upload_document(file: UploadFile = File(...)):
         f.write(file.file.read())
     # Actualizar el índice con el nuevo documento
     documents = IndexManager.load_documents("./data/03_processed")
-    storage_context = StorageContext.from_defaults(persist_dir="./storage")
-    index = IndexManager.create_index(documents, storage_context=storage_context)
+    storage_dir = "./storage_vector_store"
+    storage_context = StorageContext.from_defaults(persist_dir=storage_dir)
 
-    return {"message": "Document uploaded and index updated successfully"}
+    index = IndexManager.create_index(documents, storage_context=storage_context, storage_dir=storage_dir)
+
+    return {"message": f"Document uploaded and index updated successfully. Index ID: {index.index_id}"}
 
 # @app.post("/create-index")
-async def create_index():
+async def create_index(storage_dir="./storage_vector_store"):
     global index, storage_context
-    storage_dir = "./storage"
     documents = IndexManager.load_documents("./data/03_processed")
     # ensure_directory_exists(storage_dir)
     # storage_context = StorageContext.from_defaults(persist_dir=storage_dir)
-    index = IndexManager.create_index(documents=documents,storage_dir=storage_dir,)
+    
+    index = IndexManager.create_index(documents=documents,storage_dir=storage_dir)
+
     return {"message": "Index created and documents indexed successfully"}
 
 @app.post("/generate-questions")
@@ -63,11 +66,26 @@ async def generate_questions(query_request: QueryRequest):
     questions = get_questions(prompt)
     return {"questions": questions}
 
-@app.post("/search-answers")
-async def search_answers(query_request: QueryRequest):
+
+@app.post("/query-project")
+async def query(query_request: QueryRequest):
+    # index = IndexManager.load_index("./storage_vector_store")
     if not index:
         raise HTTPException(status_code=500, detail="Index not loaded. Please create the index first.")
+    
+    query_engine = index.as_query_engine(
+        include_text=True,
+        similarity_top_k=2
+    )
+    response = query_engine.query(query_request.query)
+    return {"response": response}
 
+@app.post("/search-answers-to-questions")
+async def search_answers(query_request: QueryRequest):
+    # index = IndexManager.load_index("./storage_vector_store")
+    if not index:
+        raise HTTPException(status_code=500, detail="Index not loaded. Please create the index first.")
+    
     questions = get_questions(query_request.query)
     results = []
     for question in questions:
