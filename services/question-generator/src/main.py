@@ -51,7 +51,8 @@ async def get_questions_from_standard():
             would ask to validate the project's compliance. Your questions 
             should cover all aspects mentioned in the summary. Ensure that 
             the questions are thorough and specific enough to identify any
-            potential compliance issues."""
+            potential compliance issues.
+            Treat every question generated as a separate entity."""
     
     response = query_index(Query(query=prompt), storage_dir="./free_form_storage")
     

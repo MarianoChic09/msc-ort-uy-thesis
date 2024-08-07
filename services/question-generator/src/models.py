@@ -2,6 +2,7 @@ from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.core import Settings
 from .config import config
+# from config import config
 
 class Models:
     @staticmethod
