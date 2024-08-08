@@ -1,0 +1,9 @@
+llama-index                             ==0.10.55
+loguru                                  ==0.7.2
+pydantic                                ==2.8.2
+fastapi                                 ==0.111.1
+pydantic-settings                       ==2.3.4
+llama-index-llms-azure-openai           ==0.1.8
+python-dotenv                           ==1.0.1
+llama-index-embeddings-azure-openai     ==0.1.10
+ragas
