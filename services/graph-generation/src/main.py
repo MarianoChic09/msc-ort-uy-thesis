@@ -15,14 +15,26 @@ async def startup_event():
     llm, embed_model = Models.initialize_models()
 
 
-def process_document(file: UploadFile, storage_dir, graph_name=None, kg_extractor=None):
+def process_document(
+    file: UploadFile,
+    storage_dir,
+    graph_name=None,
+    kg_extractor=None,
+    baseline_rag=False,
+):
     file_location = f"data/03_processed/{file.filename}"
     save_uploaded_file(file, file_location)
 
     documents = IndexManager.load_documents("data/03_processed/")
-    index = IndexManager.create_index(
-        documents, llm, embed_model, kg_extractor, storage_dir, graph_name
-    )
+
+    if baseline_rag:
+        index = IndexManager.create_baseline_rag_index(
+            documents, llm, embed_model, storage_dir
+        )
+    else:
+        index = IndexManager.create_index(
+            documents, llm, embed_model, kg_extractor, storage_dir, graph_name
+        )
     return index
 
 
@@ -83,6 +95,61 @@ async def free_form_extractor(file: UploadFile = File(...)):
         graph_name="data/08_reports/kg_free_form.html",
     )
     return {"message": "Document uploaded and free form index created successfully."}
+
+
+@app.post("/baseline-rag")
+async def baseline_rag(file: UploadFile = File(...)):
+    process_document(file, storage_dir="./baseline_rag_storage", baseline_rag=True)
+    return {"message": "Document uploaded and baseline RAG index created successfully."}
+
+
+from pydantic import BaseModel
+
+
+class QueryRequest(BaseModel):
+    query: str
+    num_retrieved_docs: int = 5
+
+
+@app.post("/query-baseline-rag")
+async def query_baseline_rag(request: QueryRequest):
+    response = IndexManager.query_baseline_rag_index(
+        request.query, request.num_retrieved_docs
+    )
+    return response
+
+
+class QueryRequest(BaseModel):
+    query: str
+    num_docs: int = 5
+    # num_retrieved_docs: int = 5
+
+
+# @app.post("/query-graph-rag-free-form")
+# async def query_graph_rag_free_form(request: QueryRequest):
+#     response = IndexManager.query_graph_rag_free_form(
+#         request.query, request.num_retrieved_docs
+#     )
+#     return response
+
+
+@app.post("/query-free-form")
+async def query_free_form_index_endpoint(query_request: QueryRequest):
+    return IndexManager.query_index(
+        query=query_request.query,
+        storage_dir="./free_form_storage",
+        num_docs=query_request.num_docs,
+    )
+
+
+@app.post("/query-schema-guided")
+async def query_index_endpoint(query_request: QueryRequest):
+    logger.info(f"query_requests: {query_request}")
+    return IndexManager.query_index(
+        query=query_request.query,
+        storage_dir="./storage",
+        num_docs=query_request.num_docs,
+    )
 
 
 if __name__ == "__main__":
