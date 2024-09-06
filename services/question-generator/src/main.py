@@ -90,8 +90,8 @@ def get_environmental_compliance_prompt():
             Treat every question generated as a separate entity."""
 
 
-def query_endpoint(url, prompt, num_retrieved_docs=5):
-    body = {"query": prompt, "num_retrieved_docs": num_retrieved_docs}
+def query_endpoint(url, prompt, num_retrieved_docs=40):
+    body = {"query": prompt, "num_docs": num_retrieved_docs}
     response = requests.post(url, json=body)
     return response.json()
 

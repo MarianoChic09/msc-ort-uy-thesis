@@ -139,6 +139,7 @@ class IndexManager:
         # configure retriever
         retriever = VectorIndexRetriever(
             index=index,
+            similarity_top_k=10,
         )
 
         query_engine = RetrieverQueryEngine(
@@ -162,5 +163,8 @@ class IndexManager:
             similarity_top_k=num_docs,
             # embed_model=embed_model,
         )
+        triplets = index.property_graph_store.get_triplets()
+        logger.info(f"Triplets: {triplets}")
         response = query_engine.query(query)
+        logger.info(f"Response: {response}")
         return response
