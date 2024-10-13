@@ -74,8 +74,8 @@ async def predefined_schema_extractor(
     )
     process_document(
         file,
-        storage_dir="./storage",
-        graph_name="data/08_reports/kg_predefined_schema.html",
+        storage_dir="./storage_defensa_test",
+        graph_name="data/08_reports/kg_predefined_schema_defensa_test.html",
         kg_extractor=kg_extractor,
     )
     # Dereference the extractor after use
